@@ -1,0 +1,23 @@
+{
+  "id": "chatcmpl-8oAaOBwynE3G7ehPb6357gmWRUryh",
+  "object": "chat.completion",
+  "created": 1706967784,
+  "model": "gpt-3.5-turbo-1106",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"error\": \"Language of the requested article is not supported for automatic retrieval\"\n}"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 56,
+    "completion_tokens": 19,
+    "total_tokens": 75
+  },
+  "system_fingerprint": "fp_04f9a1eebf"
+}
