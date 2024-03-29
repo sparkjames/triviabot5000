@@ -5,7 +5,10 @@
 
 if( file_exists('triviabot-config.php') ){
 	require_once 'triviabot-config.php';
+} else {
+	die('No config file.');
 }
+
 require_once 'triviabot-fetch.php';
 require_once 'triviabot-updateStats.php';
 require_once 'triviabot-logError.php';
@@ -100,7 +103,7 @@ try {
 						if( isset($json_response['choices'][0]['message']['content']) && json_decode($json_response['choices'][0]['message']['content'], true) ){
 							// $new_triviabot_data = json_decode($json_response['choices'][0]['message']['content'], true);
 							// $new_triviabot_data['timestamp'] = time();
-							file_put_contents( 'triviabot.json', $json_response['choices'][0]['message']['content'] );
+							file_put_contents( './api/triviabot.json', $json_response['choices'][0]['message']['content'] );
 							
 							// Update stats with successful fetch.
 							$stats['openai']['lastSuccess'] = date('Y-m-d H:i:s');
