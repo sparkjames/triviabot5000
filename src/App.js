@@ -3,6 +3,13 @@ import SampleTriviaData from './triviabot-cron/api/triviabot.json';
 import './App.scss';
 import {ReactComponent as Logo} from './assets/images/Blue-Robot.svg';
 
+/**
+ * TODO:
+ * - styles for loading state
+ * - styles for correct answer state
+ * - better notifications than "alert"
+ */
+
 function App() {
   console.log('App start');
   // console.log('SampleTriviaData = ', SampleTriviaData);
