@@ -242,7 +242,16 @@ function App() {
 
         </header>
 
-        <form action="" method="post" className={'triviaForm ' + dataIsLoading? 'triviaForm--is-loading' : '' } onSubmit={triviaFormOnSubmit}>
+        <form 
+          action="" 
+          method="post" 
+          className={
+            'triviaForm ' + 
+            (dataIsLoading? 'triviaForm--is-loading' : '') + 
+            (gotCorrectAnswer? 'triviaForm--gotCorrectAnswer' : '')
+          } 
+          onSubmit={triviaFormOnSubmit}
+          >
 
           <div className="triviaQuestion">
 
