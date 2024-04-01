@@ -29,7 +29,7 @@ function triviabot_fetch_from_ai( $content ){
       },
       {
         "role": "user",
-        "content": "Output the first sentence, the subject of the first sentence, and a unix epoch timestamp as json with the keys \"first_sentence\", \"fist_sentence_subject\", and \"timestamp\"."
+        "content": "Output the first sentence, the subject of the first sentence, and a unix epoch timestamp as json with the keys \"first_sentence\", \"first_sentence_subject\", and \"timestamp\"."
       }
     ],
     "temperature": 1,
