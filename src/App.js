@@ -103,6 +103,64 @@ function App() {
 
   };
 
+
+
+  /**
+   * Check for existing userStats, they might be a return visitor.
+   */
+  // useEffect( () => {
+  const initUserStats = () => {
+    if( localStorage.getItem('userStats') ){
+      console.log('localStorage userStats = ', localStorage.getItem('userStats') );
+      
+      const existingUserStats = JSON.parse( localStorage.getItem('userStats') );
+      // console.log( 'existingUserStats = ', existingUserStats );
+
+      // If there were existing userStats in localStorage, AND the timestamp from the trivia question has not surpassed the user's timestamp, that means they are still on the same trivia question as the last time they visited. In other words, the trivia question has been updated yet, so use their existing stats.
+      if( triviaData.current.triviaTimestamp <= existingUserStats.timestamp ){
+        userStats.current = existingUserStats;
+        setGotCorrectAnswer( existingUserStats.gotCorrectAnswer );
+        setGuessesLeft( existingUserStats.guessesLeft );
+        setTriviaAnswers( existingUserStats.triviaAnswers );
+
+      // Otherwise reset the localStorage userStats for the new question.
+      } else {
+        localStorage.setItem( 'userStats', JSON.stringify(userStats) );
+      }
+
+    // Set the localStorage userStats for the first time.
+    } else {
+      localStorage.setItem( 'userStats', JSON.stringify(userStats) );
+    }
+  // }, [triviaData]);
+  };
+
+
+
+  /**
+   * Split the sentence by the subject, so we get an array of the sentence without the subject in it. The empty spot will be filled by the fill the in the blank field (input field).
+   * 
+   * @param {*} newTriviaData 
+   * @returns Array of sentence components.
+   */
+  const getTriviaQuestionComponents = (newTriviaData) => {
+    let sentenceComponents = [];
+    console.log('newTriviaData = ', newTriviaData);
+
+    if( newTriviaData.firstSentence && newTriviaData.subject ){
+      sentenceComponents = newTriviaData.firstSentence.split( newTriviaData.subject );
+
+      if( sentenceComponents[0] !== '' && sentenceComponents[1] !== '' ){
+        sentenceComponents.splice(1, 0, '');
+      }
+    }
+
+    console.log('sentenceComponents = ', sentenceComponents);
+    return sentenceComponents;
+  };
+
+
+
   /**
    * Set the current trivia answer whenever the user types in the field.
    * 
@@ -112,6 +170,8 @@ function App() {
     // console.log(e);
     setTriviaAnswer( e.target.value );
   };
+
+
 
   /**
    * Check if the user has enough guesses left, check if the answer was correct, and update the user's stats.
@@ -158,6 +218,8 @@ function App() {
 
   };
 
+
+
   /**
    * Check if the user's answer is correct. Remove articles 
    * like 'the' and 'a' from the answer and submittedAnswer, 
@@ -176,56 +238,6 @@ function App() {
   };
 
 
-
-  /**
-   * Check for existing userStats, they might be a return visitor.
-   */
-  // useEffect( () => {
-  const initUserStats = () => {
-    if( localStorage.getItem('userStats') ){
-      console.log('localStorage userStats = ', localStorage.getItem('userStats') );
-      
-      const existingUserStats = JSON.parse( localStorage.getItem('userStats') );
-      // console.log( 'existingUserStats = ', existingUserStats );
-
-      // If there were existing userStats in localStorage, AND the timestamp from the trivia question has not surpassed the user's timestamp, that means they are still on the same trivia question as the last time they visited. In other words, the trivia question has been updated yet, so use their existing stats.
-      if( triviaData.current.triviaTimestamp <= existingUserStats.timestamp ){
-        userStats.current = existingUserStats;
-        setGotCorrectAnswer( existingUserStats.gotCorrectAnswer );
-        setGuessesLeft( existingUserStats.guessesLeft );
-        setTriviaAnswers( existingUserStats.triviaAnswers );
-
-      // Otherwise reset the localStorage userStats for the new question.
-      } else {
-        localStorage.setItem( 'userStats', JSON.stringify(userStats) );
-      }
-
-    // Set the localStorage userStats for the first time.
-    } else {
-      localStorage.setItem( 'userStats', JSON.stringify(userStats) );
-    }
-  // }, [triviaData]);
-  };
-
-  /**
-   * Split the sentence by the subject, so we get an array of the sentence without the subject in it. The empty spot will be filled by the fill the in the blank field (input field).
-   * 
-   * @param {*} newTriviaData 
-   * @returns Array of sentence components.
-   */
-  const getTriviaQuestionComponents = (newTriviaData) => {
-    let sentenceComponents = [];
-    console.log('newTriviaData = ', newTriviaData);
-
-    if( newTriviaData.firstSentence && newTriviaData.subject ){
-      sentenceComponents = newTriviaData.firstSentence.split( newTriviaData.subject );
-      // console.log(sentenceComponents);
-      // setTriviaQuestion( sentenceComponents );
-    }
-
-    console.log('sentenceComponents = ', sentenceComponents);
-    return sentenceComponents;
-  };
 
   // Run once on load.
   useEffect( () => {
@@ -275,7 +287,7 @@ function App() {
                     
                     <input className="triviaAnswer" id="triviaAnswer" name="triviaAnswer" type="text" placeholder='Type answer here&hellip;' onChange={triviaAnswerOnChange} />
                     
-                    <span className="triviaAnswer-underscores">{triviaData?.current?.subject && triviaData.current.subject.split('').map( letter => letter === ' ' ? ' ' : '_' ) }</span>
+                    <span className="triviaAnswer-underscores">{triviaData?.current?.subject && triviaData.current.subject.split('').map( letter => letter === ' ' || letter === '-' ? letter : '_' ) }</span>
 
                   </span>
                 );
