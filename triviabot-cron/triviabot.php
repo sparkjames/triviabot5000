@@ -3,7 +3,7 @@
  * This file gets run on a cron job.
  */
 
-if( file_exists('triviabot-config.php') ){
+if( file_exists('./triviabot-config.php') ){
 	require_once 'triviabot-config.php';
 } else {
 	die('No config file.');
@@ -130,3 +130,5 @@ try {
 } catch (Exception $e) {
 	triviabot_logError( 'PHP Error: ' . $e->getMessage() );
 }
+
+die('triviabot fetch complete.');
