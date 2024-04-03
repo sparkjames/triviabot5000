@@ -31,6 +31,7 @@ function App() {
     'timestamp': Math.floor(Date.now() / 1000),
   });
   // console.log('userStats = ', userStats);
+  
 
   const [triviaQuestion, setTriviaQuestion] = useState( [] );
   const [triviaAnswer, setTriviaAnswer] = useState( '' );
@@ -108,7 +109,6 @@ function App() {
   /**
    * Check for existing userStats, they might be a return visitor.
    */
-  // useEffect( () => {
   const initUserStats = () => {
     if( localStorage.getItem('userStats') ){
       // console.log('localStorage userStats = ', localStorage.getItem('userStats') );
@@ -117,6 +117,7 @@ function App() {
       // console.log( 'existingUserStats = ', existingUserStats );
 
       // If there were existing userStats in localStorage, AND the timestamp from the trivia question has not surpassed the user's timestamp, that means they are still on the same trivia question as the last time they visited. In other words, the trivia question has been updated yet, so use their existing stats.
+      // TODO: triviaData.current.triviaTimestamp + 24 hours
       if( triviaData.current.triviaTimestamp >= existingUserStats.timestamp ){
         userStats.current = existingUserStats;
         setGotCorrectAnswer( existingUserStats.gotCorrectAnswer );
@@ -132,7 +133,6 @@ function App() {
     } else {
       localStorage.setItem( 'userStats', JSON.stringify(userStats) );
     }
-  // }, [triviaData]);
   };
 
 
@@ -309,7 +309,7 @@ function App() {
           </div>
           
           <footer className="triviaFormFooter">
-            <button className="triviaFormSubmit" type="submit">Check answer</button>
+            <button className="triviaFormSubmit" type="submit" disabled={gotCorrectAnswer}>Check answer</button>
 
             <p className="triviaMeta">
               You have <span className="triviaGuessesLeft">{guessesLeft}</span> guesses left.

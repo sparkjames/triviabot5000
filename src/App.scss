@@ -185,7 +185,7 @@ body {
 		transition: opacity 150ms;
 	}
 
-	&:hover {
+	&:not(:disabled):hover {
 		border-color: rgba(255,255,255,1);
 		background-color: $color-link;
 		color: $color-invert;
@@ -193,6 +193,13 @@ body {
 		&::after {
 			opacity: 1;
 		}
+	}
+
+	&:disabled {
+		cursor: default;
+		opacity: .66;
+		color: green;
+		border-color: green;
 	}
 
 }
@@ -205,10 +212,31 @@ body {
 }
 
 .triviaAnswerList {
-	margin-top: 1em;
+	margin-top: 1.4em;
 	position: relative;
 
 	&::before {
 		content: 'Previous answers: ';
+		font-size: .75em;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
 	}
+}
+
+
+
+.triviaForm--gotCorrectAnswer {
+
+	.triviaMeta {
+		display: none;
+	}
+
+	.triviaAnswerItem:last-child {
+		color: green;
+
+		&::before {
+			content: '✓ ';
+		}
+	}
+
 }
