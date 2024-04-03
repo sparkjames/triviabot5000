@@ -30,7 +30,7 @@ function App() {
     'triviaAnswers': [],
     'timestamp': Math.floor(Date.now() / 1000),
   });
-  console.log('userStats = ', userStats);
+  // console.log('userStats = ', userStats);
 
   const [triviaQuestion, setTriviaQuestion] = useState( [] );
   const [triviaAnswer, setTriviaAnswer] = useState( '' );
@@ -48,7 +48,7 @@ function App() {
 
       if( window.location.hostname === 'localhost' ){
         setTimeout( () => {
-          console.log('SampleTriviaData = ', SampleTriviaData);
+          // console.log('SampleTriviaData = ', SampleTriviaData);
           newTriviaData = {
             'subject': SampleTriviaData.first_sentence_subject,
             'firstSentence': SampleTriviaData.first_sentence,
@@ -64,13 +64,13 @@ function App() {
 
         const res = await fetch('https://triviabot5000.com/triviabot5000api/triviabot.json')
           .then( (results) => {
-            console.log('results = ', results);
+            // console.log('results = ', results);
             const json = results.json();
-            console.log('json = ', json);
+            // console.log('json = ', json);
             return json;
           } )
           .then( (results) => {
-            console.log('results = ', results);
+            // console.log('results = ', results);
             newTriviaData = {
               'subject': results.first_sentence_subject,
               'firstSentence': results.first_sentence,
@@ -99,7 +99,7 @@ function App() {
 
     const sentenceComponents = getTriviaQuestionComponents(newTriviaData);
     setTriviaQuestion( sentenceComponents );
-    console.log('sentenceComponents = ', sentenceComponents);
+    // console.log('sentenceComponents = ', sentenceComponents);
 
   };
 
@@ -111,7 +111,7 @@ function App() {
   // useEffect( () => {
   const initUserStats = () => {
     if( localStorage.getItem('userStats') ){
-      console.log('localStorage userStats = ', localStorage.getItem('userStats') );
+      // console.log('localStorage userStats = ', localStorage.getItem('userStats') );
       
       const existingUserStats = JSON.parse( localStorage.getItem('userStats') );
       // console.log( 'existingUserStats = ', existingUserStats );
@@ -145,7 +145,7 @@ function App() {
    */
   const getTriviaQuestionComponents = (newTriviaData) => {
     let sentenceComponents = [];
-    console.log('newTriviaData = ', newTriviaData);
+    // console.log('newTriviaData = ', newTriviaData);
 
     if( newTriviaData.firstSentence && newTriviaData.subject ){
       sentenceComponents = newTriviaData.firstSentence.split( newTriviaData.subject );
@@ -155,7 +155,7 @@ function App() {
       }
     }
 
-    console.log('sentenceComponents = ', sentenceComponents);
+    // console.log('sentenceComponents = ', sentenceComponents);
     return sentenceComponents;
   };
 
@@ -168,7 +168,19 @@ function App() {
    */
   const triviaAnswerOnChange = (e) => {
     // console.log(e);
-    setTriviaAnswer( e.target.value );
+    let newValue = e.target.value;
+    // console.log('newValue = ', newValue);
+    // const checkIndex = newValue.length;
+    // console.log('checkIndex = ', checkIndex);
+    // console.log(triviaData.current.subject.split(''));
+    // console.log(triviaData.current.subject.split('')[checkIndex]);
+
+    // if( triviaData.current.subject.split('')[checkIndex] === '-' ){
+    //   newValue += '-';
+    //   e.target.value += '-';
+    // }
+
+    setTriviaAnswer( newValue );
   };
 
 
@@ -306,9 +318,9 @@ function App() {
 
           { triviaAnswers.length > 0 && 
           <ol className="triviaAnswerList"> 
-            {triviaAnswers.map( (thisAnswer) => {
+            {triviaAnswers.map( (thisAnswer, i) => {
               return (
-                <li className="triviaAnswerItem">{thisAnswer}</li>
+                <li key={i} className="triviaAnswerItem">{thisAnswer}</li>
               );
             })}
           </ol>
