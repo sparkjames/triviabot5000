@@ -117,7 +117,7 @@ function App() {
       // console.log( 'existingUserStats = ', existingUserStats );
 
       // If there were existing userStats in localStorage, AND the timestamp from the trivia question has not surpassed the user's timestamp, that means they are still on the same trivia question as the last time they visited. In other words, the trivia question has been updated yet, so use their existing stats.
-      if( triviaData.current.triviaTimestamp <= existingUserStats.timestamp ){
+      if( triviaData.current.triviaTimestamp >= existingUserStats.timestamp ){
         userStats.current = existingUserStats;
         setGotCorrectAnswer( existingUserStats.gotCorrectAnswer );
         setGuessesLeft( existingUserStats.guessesLeft );
