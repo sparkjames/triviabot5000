@@ -122,7 +122,7 @@ function App() {
       const existingUserStats = JSON.parse( localStorage.getItem('userStats') );
       console.log( 'existingUserStats = ', existingUserStats );
 
-      if( triviaData.current.timestamp === existingUserStats.timestamp ){
+      if( triviaData.current.timestamp > 0 && triviaData.current.timestamp === existingUserStats.timestamp ){
         setGotCorrectAnswer( existingUserStats.gotCorrectAnswer );
         setGuessesLeft( existingUserStats.guessesLeft );
         setTriviaAnswers( existingUserStats.triviaAnswers );
@@ -130,13 +130,24 @@ function App() {
       } else {
         // Otherwise reset the localStorage userStats for the new question.
         // localStorage.setItem( 'userStats', JSON.stringify(defaultUserStats) );
+        resetUserStats();
       }
 
-    // Set the localStorage userStats for the first time.
-    } else {
-      // localStorage.setItem( 'userStats', JSON.stringify(defaultUserStats) );
     }
 
+  };
+
+
+
+  const resetUserStats = ( newUserStats = {
+    triviaAnswers: [],
+    guessesLeft: 5,
+    gotCorrectAnswer: 0,
+    timestamp: triviaData.current.timestamp,
+  } ) => {
+    if( triviaData.current.timestamp > 0 ){
+      localStorage.setItem( 'userStats', JSON.stringify(newUserStats) );
+    }
   };
 
 
@@ -244,16 +255,14 @@ function App() {
     initTriviaData();
   }, []);
 
-  // useEffect( () => {
-  //   let newUserStats = {};
-  //   newUserStats.triviaAnswers = triviaAnswers;
-  //   newUserStats.guessesLeft = guessesLeft;
-  //   newUserStats.gotCorrectAnswer = gotCorrectAnswer;
-  //   newUserStats.timestamp = triviaData.current.timestamp;
-
-  //   localStorage.setItem( 'userStats', JSON.stringify(newUserStats) );
-
-  // }, [triviaData, triviaAnswers, guessesLeft, gotCorrectAnswer]);
+  useEffect( () => {
+    let newUserStats = {};
+    newUserStats.triviaAnswers = triviaAnswers;
+    newUserStats.guessesLeft = guessesLeft;
+    newUserStats.gotCorrectAnswer = gotCorrectAnswer;
+    newUserStats.timestamp = triviaData.current.timestamp;
+    resetUserStats(newUserStats);
+  }, [triviaData, triviaAnswers, guessesLeft, gotCorrectAnswer]);
 
 
   return (
