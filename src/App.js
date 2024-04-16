@@ -5,9 +5,9 @@ import {ReactComponent as Logo} from './assets/images/Blue-Robot.svg';
 
 /**
  * TODO:
- * - styles for loading state
- * - styles for correct answer state
+ * - text overflows with long answer
  * - better notifications than "alert"
+ * - hints in the answer for non-letter/non-number characters
  */
 
 function App() {
