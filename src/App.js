@@ -64,7 +64,7 @@ function App() {
           setDataIsLoading(false);
           initUserStats();
 
-        }, 1000);
+        }, 20000);
 
       } else {
 
@@ -290,6 +290,8 @@ function App() {
           } 
           onSubmit={triviaFormOnSubmit}
           >
+
+          <div class="triviaQuestion-loadingIndicator"><div></div><div></div><div></div><div></div></div>
 
           <div className="triviaQuestion">
 
