@@ -66,10 +66,12 @@ body {
 
 .triviaForm {
 	font-size: 2.4rem;
+	position: relative;
 }
 
 .triviaQuestion {
 	margin-bottom: 1em;
+	position: relative;
 }
 
 .triviaQuestionPart {
@@ -196,10 +198,9 @@ body {
 	}
 
 	&:disabled {
+		color: rgba(255,255,255,0.6);
 		cursor: default;
 		opacity: .66;
-		color: green;
-		border-color: green;
 	}
 
 }
@@ -232,21 +233,25 @@ body {
 	display: none;
 }
 .triviaQuestion-loadingIndicator {
-  position: relative;
-  width: 80px;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
   height: 80px;
+  position: absolute;
+  width: 80px;
+	z-index: 2;
 
 	div {
-		box-sizing: border-box;
-		display: block;
-		position: absolute;
-		width: 64px;
-		height: 64px;
-		margin: 8px;
-		border: 8px solid currentColor;
-		border-radius: 50%;
 		animation: triviaQuestion-loadingIndicator 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
 		border-color: currentColor transparent transparent transparent;
+		border-radius: 50%;
+		border: 8px solid currentColor;
+		box-sizing: border-box;
+		display: block;
+		height: 64px;
+		margin: 8px;
+		position: absolute;
+		width: 64px;
 
 		&:nth-child(1) {
 			animation-delay: -0.45s;
@@ -288,6 +293,11 @@ body {
 		}
 	}
 
+	.triviaFormSubmit {
+		color: green;
+		border-color: green;
+	}
+
 }
 
 .triviaForm--is-loading {
@@ -296,9 +306,29 @@ body {
 		display: inline-block;
 	}
 
-	.triviaQuestion,
-	.triviaFormFooter {
+	.triviaAnswerList,
+	.triviaMeta {
 		display: none;
 	}
 
+	.triviaQuestion {
+		animation-name: fadeInOut;
+		animation-duration: .75s;
+		animation-iteration-count: infinite;
+		animation-direction: alternate;
+		animation-timing-function: ease-in-out;
+		min-height: 6em;
+    background-color: white;
+    border-radius: .5em;
+	}
+
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: .25;
+  }
+  100% {
+    opacity: .5;
+  }
 }

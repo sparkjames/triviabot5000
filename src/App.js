@@ -64,7 +64,7 @@ function App() {
           setDataIsLoading(false);
           initUserStats();
 
-        }, 20000);
+        }, 200);
 
       } else {
 
@@ -291,11 +291,11 @@ function App() {
           onSubmit={triviaFormOnSubmit}
           >
 
-          <div class="triviaQuestion-loadingIndicator"><div></div><div></div><div></div><div></div></div>
-
           <div className="triviaQuestion">
 
-            { triviaQuestion.length && triviaQuestion.map( (sentence, index) => {
+            <div class="triviaQuestion-loadingIndicator"><div></div><div></div><div></div><div></div></div>
+
+            { !dataIsLoading && triviaQuestion.length && triviaQuestion.map( (sentence, index) => {
               if( sentence ){
                 return (
                   <span key={index} className="triviaQuestionPart triviaQuestionPart--sentence">{sentence}</span>
@@ -318,7 +318,7 @@ function App() {
           </div>
           
           <footer className="triviaFormFooter">
-            <button className="triviaFormSubmit" type="submit" disabled={gotCorrectAnswer}>Check answer</button>
+            <button className="triviaFormSubmit" type="submit" disabled={gotCorrectAnswer || dataIsLoading}>Check answer</button>
 
             <p className="triviaMeta">
               You have <span className="triviaGuessesLeft">{guessesLeft}</span> guesses left.
