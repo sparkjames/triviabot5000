@@ -114,19 +114,22 @@ function App() {
       // console.log('localStorage userStats = ', localStorage.getItem('userStats') );
       
       const existingUserStats = JSON.parse( localStorage.getItem('userStats') );
-      // console.log( 'existingUserStats = ', existingUserStats );
+      console.log( 'existingUserStats = ', existingUserStats );
 
       // If there were existing userStats in localStorage, AND the timestamp from the trivia question has not surpassed the user's timestamp, that means they are still on the same trivia question as the last time they visited. In other words, the trivia question has been updated yet, so use their existing stats.
       // TODO: triviaData.current.triviaTimestamp + 24 hours
-      if( triviaData.current.triviaTimestamp >= existingUserStats.timestamp ){
+      const triviaExpiresDate = new Date(triviaData.current.triviaTimestamp + 60 * 60 * 24 * 1000);
+      if( Math.floor( triviaExpiresDate.getTime() / 1000 ) >= existingUserStats.timestamp ){
+        
+        // Otherwise reset the localStorage userStats for the new question.
+        localStorage.setItem( 'userStats', JSON.stringify(userStats) );
+      
+      } else {
+
         userStats.current = existingUserStats;
         setGotCorrectAnswer( existingUserStats.gotCorrectAnswer );
         setGuessesLeft( existingUserStats.guessesLeft );
         setTriviaAnswers( existingUserStats.triviaAnswers );
-
-      // Otherwise reset the localStorage userStats for the new question.
-      } else {
-        localStorage.setItem( 'userStats', JSON.stringify(userStats) );
       }
 
     // Set the localStorage userStats for the first time.
@@ -316,7 +319,7 @@ function App() {
             </p>
           </footer>
 
-          { triviaAnswers.length > 0 && 
+          { triviaAnswers && triviaAnswers.length > 0 && 
           <ol className="triviaAnswerList"> 
             {triviaAnswers.map( (thisAnswer, i) => {
               return (
