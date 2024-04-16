@@ -21,14 +21,14 @@ function App() {
   const triviaData = useRef({
     'subject': 'TriviaBot5000',
     'firstSentence': 'TriviaBot5000 is loading...',
-    'triviaTimestamp': 0,
+    'timestamp': 0,
   });
 
   let userStats = useRef({
     'gotCorrectAnswer': 0,
     'guessesLeft': 5,
     'triviaAnswers': [],
-    'timestamp': Math.floor(Date.now() / 1000),
+    'timestamp': 0,//Math.floor(Date.now() / 1000),
   });
   // console.log('userStats = ', userStats);
   
@@ -53,11 +53,13 @@ function App() {
           newTriviaData = {
             'subject': SampleTriviaData.first_sentence_subject,
             'firstSentence': SampleTriviaData.first_sentence,
-            'triviaTimestamp': SampleTriviaData.timestamp,
+            'timestamp': SampleTriviaData.timestamp,
           };
           // setTriviaData(newTriviaData);
           handleNewTriviaData(newTriviaData);
           setDataIsLoading(false);
+          // userStats.current.timestamp = newTriviaData.timestamp;
+          // localStorage.setItem( 'userStats', JSON.stringify(userStats.current) );
 
         }, 200);
 
@@ -75,11 +77,13 @@ function App() {
             newTriviaData = {
               'subject': results.first_sentence_subject,
               'firstSentence': results.first_sentence,
-              'triviaTimestamp': results.timestamp,
+              'timestamp': results.timestamp,
             };
             // setTriviaData(newTriviaData);
             handleNewTriviaData(newTriviaData);
             setDataIsLoading(false);
+            // userStats.current.timestamp = newTriviaData.timestamp;
+            // localStorage.setItem( 'userStats', JSON.stringify(userStats.current) );
 
           } );
 
@@ -101,7 +105,6 @@ function App() {
     const sentenceComponents = getTriviaQuestionComponents(newTriviaData);
     setTriviaQuestion( sentenceComponents );
     // console.log('sentenceComponents = ', sentenceComponents);
-
   };
 
 
@@ -117,24 +120,36 @@ function App() {
       console.log( 'existingUserStats = ', existingUserStats );
 
       // If there were existing userStats in localStorage, AND the timestamp from the trivia question has not surpassed the user's timestamp, that means they are still on the same trivia question as the last time they visited. In other words, the trivia question has been updated yet, so use their existing stats.
-      // TODO: triviaData.current.triviaTimestamp + 24 hours
-      const triviaExpiresDate = new Date(triviaData.current.triviaTimestamp + 60 * 60 * 24 * 1000);
-      if( Math.floor( triviaExpiresDate.getTime() / 1000 ) >= existingUserStats.timestamp ){
-        
-        // Otherwise reset the localStorage userStats for the new question.
-        localStorage.setItem( 'userStats', JSON.stringify(userStats) );
+      // TODO: triviaData.current.timestamp + 24 hours
+      // const triviaExpiresDate = new Date(triviaData.current.timestamp + 60 * 60 * 24 * 1000);
+      // if( Math.floor( triviaExpiresDate.getTime() / 1000 ) >= existingUserStats.timestamp ){
+      // if( triviaData.current.timestamp !== existingUserStats.timestamp ){
+      //   // Otherwise reset the localStorage userStats for the new question.
+      //   localStorage.setItem( 'userStats', JSON.stringify(userStats) );
       
-      } else {
+      // } else {
+      //   userStats.current = existingUserStats;
+      //   setGotCorrectAnswer( existingUserStats.gotCorrectAnswer );
+      //   setGuessesLeft( existingUserStats.guessesLeft );
+      //   setTriviaAnswers( existingUserStats.triviaAnswers );
 
+      // }
+
+      if( triviaData.current.timestamp === existingUserStats.timestamp ){
         userStats.current = existingUserStats;
         setGotCorrectAnswer( existingUserStats.gotCorrectAnswer );
         setGuessesLeft( existingUserStats.guessesLeft );
         setTriviaAnswers( existingUserStats.triviaAnswers );
+
+      } else {
+        // Otherwise reset the localStorage userStats for the new question.
+        localStorage.setItem( 'userStats', JSON.stringify(userStats.current) );
       }
 
     // Set the localStorage userStats for the first time.
     } else {
-      localStorage.setItem( 'userStats', JSON.stringify(userStats) );
+      userStats.current.timestamp = triviaData.current.timestamp;
+      localStorage.setItem( 'userStats', JSON.stringify(userStats.current) );
     }
   };
 
@@ -259,6 +274,17 @@ function App() {
     initUserStats();
     initTriviaData();
   }, []);
+
+  useEffect( () => {
+    let newUserStats = userStats.current;
+    newUserStats.triviaAnswers = triviaAnswers;
+    newUserStats.guessesLeft = guessesLeft;
+    newUserStats.gotCorrectAnswer = gotCorrectAnswer;
+    newUserStats.timestamp = triviaData.current.timestamp;
+
+    localStorage.setItem( 'userStats', JSON.stringify(newUserStats) );
+
+  }, [triviaAnswers, guessesLeft, gotCorrectAnswer]);
 
 
   return (
